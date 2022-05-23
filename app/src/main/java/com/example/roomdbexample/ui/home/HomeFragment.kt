@@ -1,15 +1,21 @@
 package com.example.roomdbexample.ui.home
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
+import com.example.roomdbexample.R
 import com.example.roomdbexample.databinding.FragmentHomeBinding
-import com.example.roomdbexample.ui.dashboard.DashboardViewModel
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 
 class HomeFragment : Fragment() {
 
@@ -20,6 +26,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     val homeViewModel : HomeViewModel by viewModels()
 
+    @SuppressLint("StringFormatInvalid")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,11 +41,44 @@ class HomeFragment : Fragment() {
         homeViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
+
+        textView.setOnClickListener {
+            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w("TAG", "Fetching FCM registration token failed", task.exception)
+                    return@OnCompleteListener
+                }
+
+                // Get new FCM registration token
+                val token = task.result
+
+                // Log and toast
+                val msg = getString(R.string.app_name, token)
+                Log.d("TAG", token)
+                Toast.makeText(requireContext(), token, Toast.LENGTH_SHORT).show()
+            })
+        }
+
         return root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun checkGooglePlayServices(): Boolean {
+        // 1
+        val status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(requireContext())
+        // 2
+        return if (status != ConnectionResult.SUCCESS) {
+            Log.e("TAG", "Error")
+            // ask user to update google play services and manage the error.
+            false
+        } else {
+            // 3
+            Log.i("TAG", "Google play services updated")
+            true
+        }
     }
 }

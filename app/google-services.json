@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "424374076402",
+    "project_id": "roomdbexample-43d6d",
+    "storage_bucket": "roomdbexample-43d6d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424374076402:android:5c6b7066727518d22a216b",
+        "android_client_info": {
+          "package_name": "com.example.roomdbexample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "424374076402-bvagi6nqblclrs2nn77j90bjcccaokpn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjV71EWoB4PMevoHlC3vgcnD-h72nG7Pc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "424374076402-bvagi6nqblclrs2nn77j90bjcccaokpn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
