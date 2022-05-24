@@ -11,7 +11,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.roomdbexample.R
+import com.example.roomdbexample.api.services.HomeViewModelFactory
+import com.example.roomdbexample.api.services.MainRepository
+import com.example.roomdbexample.api.services.RetrofitService
 import com.example.roomdbexample.databinding.FragmentHomeBinding
+import com.example.roomdbexample.room.DB.AppDatabase
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.tasks.OnCompleteListener
@@ -24,7 +28,9 @@ class HomeFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    val homeViewModel : HomeViewModel by viewModels()
+    private val homeViewModel : HomeViewModel by viewModels {
+        HomeViewModelFactory(MainRepository(RetrofitService.getInstance(), AppDatabase.getDatabase(requireContext())))
+    }
 
     @SuppressLint("StringFormatInvalid")
     override fun onCreateView(
@@ -42,6 +48,9 @@ class HomeFragment : Fragment() {
             textView.text = it
         }
 
+        binding.textGetList.setOnClickListener {
+            homeViewModel.getProductList()
+        }
         textView.setOnClickListener {
             FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
                 if (!task.isSuccessful) {
